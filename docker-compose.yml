@@ -1,0 +1,37 @@
+version: '3.9'
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: captcha-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  captcha-api:
+    build:
+      context: .
+      dockerfile: src/CaptchaApi/Dockerfile
+    container_name: captcha-api
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__Redis=redis:6379
+      - Captcha__HmacSecret=${CAPTCHA_HMAC_SECRET}
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - ml_models:/app/models
+
+volumes:
+  redis_data:
+  ml_models:

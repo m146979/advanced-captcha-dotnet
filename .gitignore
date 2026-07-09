@@ -1,0 +1,32 @@
+## .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.userprefs
+project.lock.json
+*.nupkg
+*.snupkg
+
+## Secrets
+.env
+appsettings.Development.json
+appsettings.Local.json
+
+## ML Models (large binaries - add to Git LFS if needed)
+*.zip
+models/
+!models/.gitkeep
+
+## Node
+node_modules/
+client/dist/
+
+## OS
+.DS_Store
+Thumbs.db
+
+## Logs
+logs/
+*.log
